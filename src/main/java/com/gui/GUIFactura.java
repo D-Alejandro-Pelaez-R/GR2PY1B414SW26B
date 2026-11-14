@@ -5,6 +5,8 @@
 package com.gui;
 
 import javax.swing.*;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 /**
  *
@@ -12,7 +14,7 @@ import javax.swing.*;
  */
 
 public class GUIFactura extends JFrame{
-
+    
     private String cedulaEncargado;
     private JFrame ventanaMenu;
 
@@ -24,6 +26,7 @@ public class GUIFactura extends JFrame{
     private JButton btnAniadirProducto;
     private JButton btnCrearFactura;
     private JButton btnImprimirFactura;
+    private JButton btnRegresar;
     
     private JTextArea txtAreaDetalle;
     
@@ -64,7 +67,7 @@ public class GUIFactura extends JFrame{
         
         //Cantidad
         JLabel lblCantidad = new JLabel("Cantidad:");
-        lblProducto.setBounds(30,105,120,25);
+        lblCantidad.setBounds(30,105,120,25);
         add(lblCantidad);
         
         txtCantidad =  new JTextField();
@@ -76,16 +79,22 @@ public class GUIFactura extends JFrame{
         btnAniadirProducto.setBounds(30,150,170,35);
         add(btnAniadirProducto);
         
-        // Boton Crear Factura
-        btnCrearFactura = new JButton("Crear Factura");
-        btnCrearFactura.setBounds(120,375,200,35);
-        add(btnCrearFactura);
+        // Boton Regresar Menu
+        btnRegresar = new JButton("Regresar al Menu");
+        btnRegresar.setBounds(210,150,170,35);
+        add(btnRegresar);
         
         txtAreaDetalle = new JTextArea();
         txtAreaDetalle.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(txtAreaDetalle);
         scrollPane.setBounds(30, 205, 350, 150);
         add(scrollPane);
+                
+        // Boton Crear Factura
+        btnCrearFactura = new JButton("Crear Factura");
+        btnCrearFactura.setBounds(120,375,200,35);
+        add(btnCrearFactura);
+        
         
         // Boton Imprimir Factura
         btnImprimirFactura = new JButton("Imprimir Factura");
@@ -126,5 +135,9 @@ public class GUIFactura extends JFrame{
 
     public void agregarListenerImprimir(java.awt.event.ActionListener listener) {
         btnImprimirFactura.addActionListener(listener);
+    }
+    
+    public void agregarListenerRegresar(java.awt.event.ActionListener listener) {
+        btnRegresar.addActionListener(listener);
     }
 }

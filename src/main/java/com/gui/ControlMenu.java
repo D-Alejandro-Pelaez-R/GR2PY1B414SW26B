@@ -4,6 +4,7 @@
  */
 package com.gui;
 import com.Pantallas.Pantalla_Login;
+import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 
@@ -19,6 +20,7 @@ public class ControlMenu {
     
     public ControlMenu(String cedulaEncargado) {
         this.cedulaEncargado = cedulaEncargado;
+        
     }
 
     public void abrirGUIFactura(JFrame ventanaMenu) {
@@ -27,6 +29,15 @@ public class ControlMenu {
         
         // Abrimos la Factura pasándole la cédula y la referencia del menú para poder volver
         GUIFactura ventanaFactura = new GUIFactura(cedulaEncargado, ventanaMenu);
+ 
+        //conexion del boton Regresar
+        ventanaFactura.agregarListenerRegresar(e -> {
+            if (ventanaMenu != null) {
+                ventanaMenu.setVisible(true); // Vuelve a mostrar el menú principal
+            }
+            ventanaFactura.dispose(); // Cierra y destruye la ventana de factura actual
+        });
+  
         ventanaFactura.setVisible(true);
     }
 
