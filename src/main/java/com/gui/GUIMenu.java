@@ -13,7 +13,7 @@ import javax.swing.*;
 public class GUIMenu extends JFrame {
     
     //componentes de interfaz
-    private ControlMenu controlador;
+    private final ControlMenu controlador;
     private JButton btnFacturar;
     private JButton btnInventario;
     private JButton btnSalir;

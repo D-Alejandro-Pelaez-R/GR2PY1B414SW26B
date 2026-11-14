@@ -14,6 +14,7 @@ import javax.swing.*;
 public class GUIFactura extends JFrame{
 
     private String cedulaEncargado;
+    private JFrame ventanaMenu;
 
     // Componentes visuales
     private JTextField txtCedulaCliente;
@@ -26,9 +27,9 @@ public class GUIFactura extends JFrame{
     
     private JTextArea txtAreaDetalle;
     
-    public GUIFactura(String cedulaEncargado){
+    public GUIFactura(String cedulaEncargado, JFrame ventanaMenu){
         this.cedulaEncargado = cedulaEncargado;
-        
+        this.ventanaMenu = ventanaMenu;
         configurarVentana();
         inicializarComponentes();
     }
