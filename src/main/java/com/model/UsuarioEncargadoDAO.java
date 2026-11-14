@@ -18,7 +18,9 @@ public class UsuarioEncargadoDAO {
     
     // Constructor
     public UsuarioEncargadoDAO() {
-        this.listadoEncargados = new ArrayList<>();
+        this.listadoEncargados = new ArrayList<>(); 
+                // por defecto
+        this.listadoEncargados.add(new UsuarioEncargado("1004339824", "2634"));
     }
     
     /**
@@ -55,5 +57,9 @@ public class UsuarioEncargadoDAO {
                 return;
             }
         }
+    }
+
+    public UsuarioEncargado read(String cedula) {
+        return obtenerEncargado(cedula);
     }
 }
