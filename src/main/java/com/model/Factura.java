@@ -11,14 +11,14 @@ public class Factura {
     private double totalFactura;
     
     //ATRIBUTOS ASOCIADOS
-    //private Cliente clienteFactura;
-    //private ArrayList<Producto> productosFactura;
+    private Cliente clienteFactura;
+    private ArrayList<Producto> productosFactura;
     
     //CONSTRUCTOR
-    public Factura(/*Cliente cliente, ArryList<Producto> prodcutos*/) {//Agregación de cliente y productos
+    public Factura(Cliente cliente, ArrayList<Producto> prodcutos) {//Agregación de cliente y productos
         this.fechaHoraEmisionFactura = LocalDateTime.now();
-        //this.clienteFactura = cliente;
-        //this.productosFactura = prodcutos;
+        this.clienteFactura = cliente;
+        this.productosFactura = prodcutos;
     }
     
     //GETTERS Y SETTERS
@@ -66,23 +66,16 @@ public class Factura {
     /**
      * Obtiene el cliente asociado a la factura
      * @return cliente -> Cliente
-     * public Cliente getClienteFactura(){
-     *      return this.clienteFactura();
-     * }
-     
-     * Obtiene el listado de productos asociados a la factura
-     * @return productos -> ArrayList<Producto>
-     * public ArraysList<Producto> getProductosFactura(){
-     *      return this.productosFactura();
-     * }
      */
- 
-    
-    
-    
-    
-    
-    
-    
-    
+    public Cliente getClienteFactura(){
+        return this.clienteFactura;
+    }
+     
+    /**
+    * Obtiene el listado de productos asociados a la factura
+    * @return productos -> ArrayList(Producto)
+    */
+    public ArrayList<Producto> getProductosFactura(){
+        return this.productosFactura;
+    }
 }
