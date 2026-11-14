@@ -114,18 +114,24 @@ public class Pantalla_Login extends javax.swing.JFrame {
 
     private void jBIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBIngresarActionPerformed
         // TODO add your handling code here:
-        String cedEncargado = jTCedula.toString();
-        String contraseniaEncargado = jPContrasenia.toString();
-        for(int i = 0 ; i < contEncargado; i++){
-            if(cedEncargado.equals(ListaEncargados.get(i).getCedula())){
-                if(contraseniaEncargado.equals(ListaEncargados.get(i).getContrasena())){
-                    
-                }else{
-                    JOptionPane.showMessageDialog(this, "Usuario o clave incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }else{
-                JOptionPane.showMessageDialog(this, "Usuario o clave incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        String cedEncargado = jTCedula.getText().trim();
+        String contraseniaEncargado = new String(jPContrasenia.getPassword());
+        boolean acceso = false;
+
+        for (int i = 0; i < ListaEncargados.size(); i++) {
+            if (cedEncargado.equals(ListaEncargados.get(i).getCedula())
+                && contraseniaEncargado.equals(ListaEncargados.get(i).getContrasena())) {
+                acceso = true;
+                GUIMenu menu = new GUIMenu(cedEncargado);
+                menu.setVisible(true);
+                menu.setLocationRelativeTo(null);
+                this.dispose();
+            break;
+        }
+        }
+
+        if (!acceso) {
+        JOptionPane.showMessageDialog(this, "Usuario o clave incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
         }
         
         
