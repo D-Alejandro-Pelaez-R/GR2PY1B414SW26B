@@ -36,7 +36,6 @@ public class generarFactura {
     /**
      * Imprime todo el detalle de la factura
      * @param factura
-     * @return 
      */
     public void imprimirFactura(String factura){
         //Algo para imrpimir

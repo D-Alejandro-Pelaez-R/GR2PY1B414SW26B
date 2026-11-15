@@ -1,6 +1,6 @@
 package com.Pantallas;
 
-import com.controladores.controladorBuscarProducto;
+import com.controladores.controladorInventario;
 import com.model.Producto;
 import com.model.ProductoDAO;
 import javax.swing.JOptionPane;
@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 public class Pantalla_Inventario extends javax.swing.JFrame {
 
     private ProductoDAO productoDao;
-    private controladorBuscarProducto buscador;
+    private controladorInventario controlador;
 
     /**
      * Crea la pantalla con su propio ProductoDAO (lista vacía)
@@ -27,8 +27,8 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
      */
     public Pantalla_Inventario(ProductoDAO productoDao) {
         this.productoDao = productoDao;
-        // El buscador trabaja sobre el mismo ProductoDAO que usa esta pantalla
-        this.buscador = new controladorBuscarProducto(productoDao);
+        // El controlador trabaja sobre el mismo ProductoDAO que usa esta pantalla
+        this.controlador = new controladorInventario(productoDao);
         initComponents();
         setSize(850, 500);
         setLocationRelativeTo(null);
@@ -41,8 +41,8 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
     private void cargarTabla() {
         DefaultTableModel modelo = (DefaultTableModel) jTProductos.getModel();
         modelo.setRowCount(0);
-        for (int i = 0; i < productoDao.getListadoProductos().size(); i++) {
-            Producto p = productoDao.getListadoProductos().get(i);
+        for (int i = 0; i < controlador.obtenerListadoProductos().size(); i++) {
+            Producto p = controlador.obtenerListadoProductos().get(i);
             modelo.addRow(new Object[]{
                 p.getIdProducto(),
                 p.getNombre(),
@@ -139,12 +139,12 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
         if (nuevo == null) {
             return; // se canceló
         }
-        if (buscador.existeProducto(nuevo.getIdProducto())) {
+        if (controlador.existeProducto(nuevo.getIdProducto())) {
             JOptionPane.showMessageDialog(this, "Ya existe un producto con ese ID.",
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        productoDao.agregarProducto(nuevo);
+        controlador.aniadirProducto(nuevo);
         cargarTabla();
         JOptionPane.showMessageDialog(this, "Producto añadido correctamente.");
     }//GEN-LAST:event_jBAniadirActionPerformed
@@ -160,7 +160,7 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        Producto p = buscador.buscarPorId(id);
+        Producto p = controlador.buscarPorId(id);
         if (p == null) {
             JOptionPane.showMessageDialog(this, "No existe un producto con ese ID.",
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -170,7 +170,7 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
                 "¿Eliminar el producto \"" + p.getNombre() + "\"?",
                 "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
         if (opcion == JOptionPane.YES_OPTION) {
-            productoDao.eliminarProducto(id);
+            controlador.eliminarProduct(id);
             cargarTabla();
             JOptionPane.showMessageDialog(this, "Producto eliminado correctamente.");
         }
@@ -182,7 +182,7 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
             return; // se canceló
         }
         id = id.trim();
-        Producto p = buscador.buscarPorId(id);
+        Producto p = controlador.buscarPorId(id);
         if (p == null) {
             JOptionPane.showMessageDialog(this, "No existe un producto con ese ID.",
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -194,7 +194,7 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
 
         Producto modificado = ventana.getResultado();
         if (modificado != null) {
-            productoDao.actualizarProducto(modificado);
+            controlador.actualizarProducto(modificado);
             cargarTabla();
             JOptionPane.showMessageDialog(this, "Producto modificado correctamente.");
         }
