@@ -1,20 +1,56 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-package Pantallas;
+package com.Pantallas;
+
+import com.controladores.controladorBuscarProducto;
+import com.model.Producto;
+import com.model.ProductoDAO;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author Usuario
+ * Pantalla de inventario de la ferretería: muestra el listado de productos
+ * y permite añadir, eliminar (por ID) y modificar (por ID) productos.
  */
 public class Pantalla_Inventario extends javax.swing.JFrame {
 
+    private ProductoDAO productoDao;
+    private controladorBuscarProducto buscador;
+
     /**
-     * Creates new form Pantalla_Inventario
+     * Crea la pantalla con su propio ProductoDAO (lista vacía)
      */
     public Pantalla_Inventario() {
+        this(new ProductoDAO());
+    }
+
+    /**
+     * Crea la pantalla usando un ProductoDAO compartido con otras pantallas
+     */
+    public Pantalla_Inventario(ProductoDAO productoDao) {
+        this.productoDao = productoDao;
+        // El buscador trabaja sobre el mismo ProductoDAO que usa esta pantalla
+        this.buscador = new controladorBuscarProducto(productoDao);
         initComponents();
+        setSize(850, 500);
+        setLocationRelativeTo(null);
+        cargarTabla();
+    }
+
+    /**
+     * Vuelve a llenar la tabla con los productos actuales
+     */
+    private void cargarTabla() {
+        DefaultTableModel modelo = (DefaultTableModel) jTProductos.getModel();
+        modelo.setRowCount(0);
+        for (int i = 0; i < productoDao.getListadoProductos().size(); i++) {
+            Producto p = productoDao.getListadoProductos().get(i);
+            modelo.addRow(new Object[]{
+                p.getIdProducto(),
+                p.getNombre(),
+                p.getDescripcion(),
+                p.getPrecio(),
+                p.getStock()
+            });
+        }
     }
 
     /**
@@ -26,57 +62,167 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jLTitulo = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTProductos = new javax.swing.JTable();
+        jPBotones = new javax.swing.JPanel();
+        jBAniadir = new javax.swing.JButton();
+        jBEliminar = new javax.swing.JButton();
+        jBModificar = new javax.swing.JButton();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Ferretería - Inventario");
+
+        jLTitulo.setFont(new java.awt.Font("Segoe UI", 1, 28)); // NOI18N
+        jLTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLTitulo.setText("INVENTARIO");
+        jLTitulo.setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 0, 10, 0));
+        getContentPane().add(jLTitulo, java.awt.BorderLayout.NORTH);
+
+        jTProductos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nombre", "Descripción", "Precio", "Stock"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTProductos);
+
+        getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        jPBotones.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 20, 10));
+
+        jBAniadir.setText("Añadir producto");
+        jBAniadir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBAniadirActionPerformed(evt);
+            }
+        });
+        jPBotones.add(jBAniadir);
+
+        jBEliminar.setText("Eliminar producto");
+        jBEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBEliminarActionPerformed(evt);
+            }
+        });
+        jPBotones.add(jBEliminar);
+
+        jBModificar.setText("Modificar producto");
+        jBModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBModificarActionPerformed(evt);
+            }
+        });
+        jPBotones.add(jBModificar);
+
+        getContentPane().add(jPBotones, java.awt.BorderLayout.SOUTH);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jBAniadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAniadirActionPerformed
+        // Abre la ventana con los campos vacíos
+        Pantalla_Producto ventana = new Pantalla_Producto(this, true, null);
+        ventana.setVisible(true);
+
+        Producto nuevo = ventana.getResultado();
+        if (nuevo == null) {
+            return; // se canceló
+        }
+        if (buscador.existeProducto(nuevo.getIdProducto())) {
+            JOptionPane.showMessageDialog(this, "Ya existe un producto con ese ID.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        productoDao.agregarProducto(nuevo);
+        cargarTabla();
+        JOptionPane.showMessageDialog(this, "Producto añadido correctamente.");
+    }//GEN-LAST:event_jBAniadirActionPerformed
+
+    private void jBEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBEliminarActionPerformed
+        String id = JOptionPane.showInputDialog(this, "Ingrese el ID del producto a eliminar:");
+        if (id == null) {
+            return; // se canceló
+        }
+        id = id.trim();
+        if (id.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar un ID.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        Producto p = buscador.buscarPorId(id);
+        if (p == null) {
+            JOptionPane.showMessageDialog(this, "No existe un producto con ese ID.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        int opcion = JOptionPane.showConfirmDialog(this,
+                "¿Eliminar el producto \"" + p.getNombre() + "\"?",
+                "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        if (opcion == JOptionPane.YES_OPTION) {
+            productoDao.eliminarProducto(id);
+            cargarTabla();
+            JOptionPane.showMessageDialog(this, "Producto eliminado correctamente.");
+        }
+    }//GEN-LAST:event_jBEliminarActionPerformed
+
+    private void jBModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBModificarActionPerformed
+        String id = JOptionPane.showInputDialog(this, "Ingrese el ID del producto a modificar:");
+        if (id == null) {
+            return; // se canceló
+        }
+        id = id.trim();
+        Producto p = buscador.buscarPorId(id);
+        if (p == null) {
+            JOptionPane.showMessageDialog(this, "No existe un producto con ese ID.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        // Abre la ventana con la información actual del producto
+        Pantalla_Producto ventana = new Pantalla_Producto(this, true, p);
+        ventana.setVisible(true);
+
+        Producto modificado = ventana.getResultado();
+        if (modificado != null) {
+            productoDao.actualizarProducto(modificado);
+            cargarTabla();
+            JOptionPane.showMessageDialog(this, "Producto modificado correctamente.");
+        }
+    }//GEN-LAST:event_jBModificarActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Pantalla_Inventario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Pantalla_Inventario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Pantalla_Inventario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Pantalla_Inventario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Pantalla_Inventario().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            ProductoDAO dao = new ProductoDAO();
+            // Productos de ejemplo de la ferretería (puedes borrarlos)
+            dao.agregarProducto(new Producto("F001", "Martillo de uña", "Martillo de acero 16 oz, mango de fibra", 12.50, 25));
+            dao.agregarProducto(new Producto("F002", "Clavos 2 pulgadas", "Clavos de acero vendidos por libra", 1.80, 200));
+            dao.agregarProducto(new Producto("F003", "Cemento 50 kg", "Saco de cemento Portland", 8.90, 80));
+            dao.agregarProducto(new Producto("F004", "Destornillador plano", "Punta plana de 6 mm", 3.25, 40));
+            dao.agregarProducto(new Producto("F005", "Tubo PVC 1/2", "Tubo PVC de 1/2 pulgada x 3 m", 4.10, 60));
+            new Pantalla_Inventario(dao).setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBAniadir;
+    private javax.swing.JButton jBEliminar;
+    private javax.swing.JButton jBModificar;
+    private javax.swing.JLabel jLTitulo;
+    private javax.swing.JPanel jPBotones;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTProductos;
     // End of variables declaration//GEN-END:variables
 }

@@ -39,7 +39,6 @@ public class Pantalla_Login extends javax.swing.JFrame {
         jBIngresar = new javax.swing.JButton();
         jPContrasenia = new javax.swing.JPasswordField();
         jLabel1 = new javax.swing.JLabel();
-        jBOlvide = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,37 +55,26 @@ public class Pantalla_Login extends javax.swing.JFrame {
 
         jLabel1.setText("Inicio de Sesión");
 
-        jBOlvide.setText("Olvide mi contraseña");
-        jBOlvide.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jBOlvideActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(61, 61, 61)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLCedula)
-                                .addComponent(jLContrasenia))
-                            .addGap(42, 42, 42)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jPContrasenia)
-                                .addComponent(jTCedula)))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(90, 90, 90)
-                            .addComponent(jBIngresar)
-                            .addGap(66, 66, 66)
-                            .addComponent(jBOlvide)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(177, 177, 177)
-                        .addComponent(jLabel1)))
+                        .addGap(179, 179, 179)
+                        .addComponent(jBIngresar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(61, 61, 61)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLCedula)
+                            .addComponent(jLContrasenia))
+                        .addGap(42, 42, 42)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jPContrasenia, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                                .addComponent(jTCedula)))))
                 .addContainerGap(68, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -103,9 +91,7 @@ public class Pantalla_Login extends javax.swing.JFrame {
                     .addComponent(jLContrasenia)
                     .addComponent(jPContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jBIngresar)
-                    .addComponent(jBOlvide))
+                .addComponent(jBIngresar)
                 .addContainerGap(78, Short.MAX_VALUE))
         );
 
@@ -137,10 +123,6 @@ public class Pantalla_Login extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jBIngresarActionPerformed
-
-    private void jBOlvideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBOlvideActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jBOlvideActionPerformed
 
     /**
      * @param args the command line arguments
@@ -179,7 +161,6 @@ public class Pantalla_Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBIngresar;
-    private javax.swing.JButton jBOlvide;
     private javax.swing.JLabel jLCedula;
     private javax.swing.JLabel jLContrasenia;
     private javax.swing.JLabel jLabel1;
