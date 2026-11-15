@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.gui;
+package com.Pantallas;
 
 import javax.swing.*;
 import javax.swing.JScrollPane;
@@ -13,7 +13,7 @@ import javax.swing.JTextArea;
  * @author DELL
  */
 
-public class GUIFactura extends JFrame{
+public class Pantalla_Factura extends JFrame{
     
     private String cedulaEncargado;
     private JFrame ventanaMenu;
@@ -30,7 +30,7 @@ public class GUIFactura extends JFrame{
     
     private JTextArea txtAreaDetalle;
     
-    public GUIFactura(String cedulaEncargado, JFrame ventanaMenu){
+    public Pantalla_Factura(String cedulaEncargado, JFrame ventanaMenu){
         this.cedulaEncargado = cedulaEncargado;
         this.ventanaMenu = ventanaMenu;
         configurarVentana();

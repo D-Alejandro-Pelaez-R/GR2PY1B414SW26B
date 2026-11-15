@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.gui;
+package com.controladores;
 import com.Pantallas.Pantalla_Login;
+import com.Pantallas.Pantalla_Factura;
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 
@@ -13,11 +14,11 @@ import javax.swing.JFrame;
  * @author DELL
  */
 
-public class ControlMenu {
+public class ControladorMenu {
     
     private final String cedulaEncargado;
     
-    public ControlMenu(String cedulaEncargado) {
+    public ControladorMenu(String cedulaEncargado) {
         this.cedulaEncargado = cedulaEncargado;
         
     }
@@ -27,7 +28,7 @@ public class ControlMenu {
         ventanaMenu.setVisible(false);
         
         // Abrimos la Factura pasándole la cédula y la referencia del menú para poder volver
-        GUIFactura ventanaFactura = new GUIFactura(cedulaEncargado, ventanaMenu);
+        Pantalla_Factura ventanaFactura = new Pantalla_Factura(cedulaEncargado, ventanaMenu);
  
         //conexion del boton Regresar
         ventanaFactura.agregarListenerRegresar(e -> {

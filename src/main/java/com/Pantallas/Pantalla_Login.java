@@ -5,7 +5,6 @@
 package com.Pantallas;
 
 import com.controladores.controladorLogin;
-import com.gui.*;
 import com.model.*;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -117,7 +116,7 @@ public class Pantalla_Login extends javax.swing.JFrame {
         // 3. Evaluamos el resultado
         if (acceso) {
          JOptionPane.showMessageDialog(this, "Acceso Concedido", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-         GUIMenu menu = new GUIMenu(cedEncargado);
+         Pantalla_Menu menu = new Pantalla_Menu(cedEncargado);
          menu.setVisible(true);
          menu.setLocationRelativeTo(null);
          this.dispose(); // Cierra el login

@@ -2,24 +2,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.gui;
+package com.Pantallas;
 
+import com.controladores.ControladorMenu;
 import javax.swing.*;
 
 /**
  *
  * @author DELL
  */
-public class GUIMenu extends JFrame {
+public class Pantalla_Menu extends JFrame {
     
     //componentes de interfaz
-    private final ControlMenu controlador;
+    private final ControladorMenu controlador;
     private JButton btnFacturar;
     private JButton btnInventario;
     private JButton btnSalir;
     
-    public GUIMenu(String cedulaEncargado){
-        this.controlador = new ControlMenu(cedulaEncargado);
+    public Pantalla_Menu(String cedulaEncargado){
+        this.controlador = new ControladorMenu(cedulaEncargado);
         initComponents(cedulaEncargado);
     }
     
@@ -38,19 +39,19 @@ public class GUIMenu extends JFrame {
         // Boton Facturar
         btnFacturar = new JButton("Realizar Venta / Factura");
         btnFacturar.setBounds(100, 80, 200, 40);
-        btnFacturar.addActionListener(e -> controlador.abrirGUIFactura(GUIMenu.this));
+        btnFacturar.addActionListener(e -> controlador.abrirGUIFactura(Pantalla_Menu.this));
         add(btnFacturar);
         
         // Boton Inventario
         btnInventario = new JButton("Gestionar Inventario");
         btnInventario.setBounds(100, 140, 200, 40);
-        btnInventario.addActionListener(e -> controlador.abrirGUIInventario(GUIMenu.this));
+        btnInventario.addActionListener(e -> controlador.abrirGUIInventario(Pantalla_Menu.this));
         add(btnInventario);
         
         // Boton Salir
         btnSalir = new JButton("Salir");
         btnSalir.setBounds(100, 200, 200, 30);
-        btnSalir.addActionListener(e -> controlador.cerrarSesion(GUIMenu.this));
+        btnSalir.addActionListener(e -> controlador.cerrarSesion(Pantalla_Menu.this));
         add(btnSalir);
     }    
 }
