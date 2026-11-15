@@ -7,15 +7,20 @@ import com.controladores.*;
 
 public class Main {
     public static void main(String[] args) {
-        // 1. Instancia compartida de ProductoDAO con datos iniciales de la ferretería
+        // 1. Instancias compartidas de los DAOS de la ferreteria
         ProductoDAO productoDAO = new ProductoDAO();
+        ClienteDAO clienteDAO = new ClienteDAO();
+        FacturaDAO facturaDAO = new FacturaDAO();
+        
         cargarProductosIniciales(productoDAO);
-
-        // 2. Controlador de inventario conectado al ProductoDAO compartido
+        cargarClientesIniciales(clienteDAO);
+        
+        // 2. Controladores conectados a los DAOS compartidos
         controladorInventario ctrlInventario = new controladorInventario(productoDAO);
-
+        generarFactura ctrlFactura = new generarFactura(facturaDAO, clienteDAO, productoDAO);
+        
         // 3. Controlador central de navegación
-        ControladorMenu ctrlMenu = new ControladorMenu(ctrlInventario);
+        ControladorMenu ctrlMenu = new ControladorMenu(ctrlInventario, ctrlFactura);
 
         // 4. Inicio del flujo gráfico desde Login
         java.awt.EventQueue.invokeLater(() -> iniciarFlujoLogin(ctrlMenu));
@@ -39,4 +44,10 @@ public class Main {
         dao.agregarProducto(new Producto("F004", "Destornillador plano", "Punta plana de 6 mm", 3.25, 40));
         dao.agregarProducto(new Producto("F005", "Tubo PVC 1/2", "Tubo PVC de 1/2 pulgada x 3 m", 4.10, 60));
     }
+    
+    private static void cargarClientesIniciales(ClienteDAO dao) {
+        dao.agregarCliente(new Cliente("1712345678", "Carlos Pérez", "0991234567", "Av. Colón y 10 de Agosto", "carlos.perez@email.com"));
+        dao.agregarCliente(new Cliente("1798765432", "María Gómez", "0987654321", "Av. Amazonas N34-12", "maria.gomez@email.com"));
+    }
+    
 }
