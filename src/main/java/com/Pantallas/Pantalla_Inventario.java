@@ -2,7 +2,6 @@ package com.Pantallas;
 
 import com.controladores.controladorInventario;
 import com.model.Producto;
-import com.model.ProductoDAO;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.awt.BorderLayout;
@@ -21,24 +20,14 @@ import javax.swing.WindowConstants;
  * y permite añadir, eliminar (por ID) y modificar (por ID) productos.
  */
 public class Pantalla_Inventario extends javax.swing.JFrame {
-
-    private ProductoDAO productoDao;
-    private controladorInventario controlador;
-
+    
+    private final controladorInventario controlador;
+    
     /**
-     * Crea la pantalla con su propio ProductoDAO (lista vacía)
+     * Crea la pantalla recibiendo el controlador desde Main
      */
-    public Pantalla_Inventario() {
-        this(new ProductoDAO());
-    }
-
-    /**
-     * Crea la pantalla usando un ProductoDAO compartido con otras pantallas
-     */
-    public Pantalla_Inventario(ProductoDAO productoDao) {
-        this.productoDao = productoDao;
-        // El controlador trabaja sobre el mismo ProductoDAO que usa esta pantalla
-        this.controlador = new controladorInventario(productoDao);
+    public Pantalla_Inventario(controladorInventario controlador) {
+        this.controlador = controlador;
         initComponents();
         setSize(850, 500);
         setLocationRelativeTo(null);
@@ -243,9 +232,10 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        controlador.aniadirProducto(nuevo);
-        cargarTabla();
-        JOptionPane.showMessageDialog(this, "Producto añadido correctamente.");
+        if (controlador.aniadirProducto(nuevo)) {
+            cargarTabla();
+            JOptionPane.showMessageDialog(this, "Producto añadido correctamente.");
+        }
     }//GEN-LAST:event_jBAniadirActionPerformed
 
     private void jBEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBEliminarActionPerformed
@@ -295,22 +285,6 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Producto modificado correctamente.");
         }
     }//GEN-LAST:event_jBModificarActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> {
-            ProductoDAO dao = new ProductoDAO();
-            // Productos de ejemplo de la ferretería (puedes borrarlos)
-            dao.agregarProducto(new Producto("F001", "Martillo de uña", "Martillo de acero 16 oz, mango de fibra", 12.50, 25));
-            dao.agregarProducto(new Producto("F002", "Clavos 2 pulgadas", "Clavos de acero vendidos por libra", 1.80, 200));
-            dao.agregarProducto(new Producto("F003", "Cemento 50 kg", "Saco de cemento Portland", 8.90, 80));
-            dao.agregarProducto(new Producto("F004", "Destornillador plano", "Punta plana de 6 mm", 3.25, 40));
-            dao.agregarProducto(new Producto("F005", "Tubo PVC 1/2", "Tubo PVC de 1/2 pulgada x 3 m", 4.10, 60));
-            new Pantalla_Inventario(dao).setVisible(true);
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBAniadir;

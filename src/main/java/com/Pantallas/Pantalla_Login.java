@@ -1,12 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.Pantallas;
 
 import com.controladores.controladorLogin;
-import com.model.*;
-import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,13 +9,14 @@ import javax.swing.JOptionPane;
  */
 public class Pantalla_Login extends javax.swing.JFrame {
     
-    private controladorLogin controlador = new controladorLogin();
+    private final controladorLogin controlador;
     
     /**
      * Creates new form Pantalla_Login
      */
     
-    public Pantalla_Login() {
+    public Pantalla_Login(controladorLogin controlador) {
+        this.controlador = controlador;
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -115,50 +110,13 @@ public class Pantalla_Login extends javax.swing.JFrame {
 
         // 3. Evaluamos el resultado
         if (acceso) {
-         JOptionPane.showMessageDialog(this, "Acceso Concedido", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-         Pantalla_Menu menu = new Pantalla_Menu(cedEncargado);
-         menu.setVisible(true);
-         menu.setLocationRelativeTo(null);
-         this.dispose(); // Cierra el login
+            JOptionPane.showMessageDialog(this, "Acceso Concedido", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose(); // Cierra el login
+            controlador.continuarAlMenu(cedEncargado); // Abre el menú mediante Main
         } else {
             JOptionPane.showMessageDialog(this, "Usuario o clave incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jBIngresarActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Pantalla_Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Pantalla_Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Pantalla_Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Pantalla_Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Pantalla_Login().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBIngresar;

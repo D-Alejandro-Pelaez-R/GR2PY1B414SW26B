@@ -1,13 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.controladores;
-import com.Pantallas.Pantalla_Login;
-import com.Pantallas.Pantalla_Factura;
-import javax.swing.JOptionPane;
-import javax.swing.JFrame;
 
+import com.Pantallas.Pantalla_Factura;
+import com.Pantallas.Pantalla_Inventario;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,11 +14,24 @@ import javax.swing.JFrame;
 
 public class ControladorMenu {
     
-    private final String cedulaEncargado;
+    private String cedulaEncargado;
+    private final controladorInventario ctrlInventario;
+    private Runnable onCerrarSesion;
     
-    public ControladorMenu(String cedulaEncargado) {
+    public ControladorMenu(controladorInventario ctrlInventario) {
+        this.ctrlInventario = ctrlInventario;
+    }
+    
+    public void setCedulaEncargado(String cedulaEncargado) {
         this.cedulaEncargado = cedulaEncargado;
-        
+    }
+
+    public String getCedulaEncargado() {
+        return cedulaEncargado;
+    }
+
+    public void setOnCerrarSesion(Runnable onCerrarSesion) {
+        this.onCerrarSesion = onCerrarSesion;
     }
 
     public void abrirGUIFactura(JFrame ventanaMenu) {
@@ -44,12 +55,19 @@ public class ControladorMenu {
     public void abrirGUIInventario(JFrame ventanaMenu) {
         ventanaMenu.setVisible(false);
         
-        // Simulación o apertura de la GUI de Inventario
-        JOptionPane.showMessageDialog(ventanaMenu, "Abriendo GUI de Inventario...");
-        // GUIInventario ventanaInventario = new GUIInventario(ventanaMenu);
-        // ventanaInventario.setVisible(true);
+        Pantalla_Inventario ventanaInventario = new Pantalla_Inventario(this.ctrlInventario);
         
-        ventanaMenu.setVisible(true); // Se muestra de nuevo para el flujo
+        //Cerrar Inventario, vuelve a mostrar el menú sin perder datos
+        ventanaInventario.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if (ventanaMenu != null) {
+                    ventanaMenu.setVisible(true);
+                }
+            }
+        });
+        
+        ventanaInventario.setVisible(true);
     }
 
     public void cerrarSesion(JFrame ventanaMenu) {
@@ -61,9 +79,10 @@ public class ControladorMenu {
         );
 
        if (confirmacion == JOptionPane.YES_OPTION) {
-            Pantalla_Login login = new Pantalla_Login();
-            login.setVisible(true);
-            ventanaMenu.dispose(); // regresa al login
+            ventanaMenu.dispose(); //Cierra el menú actual
+            if (onCerrarSesion != null) {
+                onCerrarSesion.run(); //Vuelve a abrir Pantalla_Login desde Main
+            }
         }
     }
 }

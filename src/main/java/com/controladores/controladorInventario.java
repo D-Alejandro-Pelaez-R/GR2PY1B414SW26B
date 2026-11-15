@@ -6,14 +6,9 @@ import java.util.ArrayList;
 
 public class controladorInventario {
     
-    private ProductoDAO productoDao;
+    private final ProductoDAO productoDao;
 
-    // Constructor vacío
-    public controladorInventario() {
-        this.productoDao = new ProductoDAO();
-    }
-
-    // Constructor que recibe un ProductoDAO compartido
+    //Constructor que obliga a recibir el ProductoDAO compartido desde Main
     public controladorInventario(ProductoDAO productoDao) {
         this.productoDao = productoDao;
     }
@@ -21,12 +16,16 @@ public class controladorInventario {
     //METODOS DE GESTIÓN DE INVENTARIO
     
     /**
-     * Devuelve el stock de un producto
+     * Devuelve el stock de un producto, o -1 si no existe
      * @param idProducto
      * @return 
      */
     public int consutlarStock(String idProducto){
-        return productoDao.obtenerProducto(idProducto).getStock();
+        Producto p = productoDao.obtenerProducto(idProducto);
+        if (p != null) {
+            return p.getStock();
+        }
+        return -1;
     }
     
     /**
@@ -36,7 +35,7 @@ public class controladorInventario {
      */
     public boolean eliminarProduct(String idProducto){
         if (productoDao.obtenerIndiceProducto(idProducto) != -1){
-            productoDao.getListadoProductos().remove( productoDao.obtenerIndiceProducto(idProducto) );
+            productoDao.eliminarProducto(idProducto);
             return true;
         }
         return false;
@@ -48,8 +47,8 @@ public class controladorInventario {
      * @return 
      */
     public boolean aniadirProducto(Producto producto){
-        if (productoDao.obtenerIndiceProducto(producto.getIdProducto()) == -1){
-            productoDao.getListadoProductos().add(producto);
+        if (producto != null && productoDao.obtenerIndiceProducto(producto.getIdProducto()) == -1){
+            productoDao.agregarProducto(producto);
             return true;
         }
         return false;
@@ -62,8 +61,9 @@ public class controladorInventario {
      * @return 
      */
     public boolean modificarStockProducto(String idProducto, int stock){
-        if(productoDao.obtenerIndiceProducto(idProducto) != -1){
-            productoDao.obtenerProducto(idProducto).setStock(stock);
+        Producto p = productoDao.obtenerProducto(idProducto);
+        if (p != null && stock >= 0){
+            p.setStock(stock);
             return true;
         }
         return false;
@@ -76,8 +76,9 @@ public class controladorInventario {
      * @return 
      */
     public boolean modificarPrecioProducto(String idProducto, double precio){
-        if(productoDao.obtenerIndiceProducto(idProducto) != -1){
-            productoDao.obtenerProducto(idProducto).setPrecio(precio);
+        Producto p = productoDao.obtenerProducto(idProducto);
+        if (p != null && precio >= 0){
+            p.setPrecio(precio);
             return true;
         }
         return false;
@@ -89,7 +90,7 @@ public class controladorInventario {
      * @return 
      */
     public boolean actualizarProducto(Producto producto) {
-        if (productoDao.obtenerIndiceProducto(producto.getIdProducto()) != -1) {
+        if (producto != null && productoDao.obtenerIndiceProducto(producto.getIdProducto()) != -1) {
             productoDao.actualizarProducto(producto);
             return true;
         }

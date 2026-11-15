@@ -19,9 +19,9 @@ public class Pantalla_Menu extends JFrame {
     private JButton btnInventario;
     private JButton btnSalir;
     
-    public Pantalla_Menu(String cedulaEncargado){
-        this.controlador = new ControladorMenu(cedulaEncargado);
-        initComponents(cedulaEncargado);
+    public Pantalla_Menu(ControladorMenu controlador){
+        this.controlador = controlador;
+        initComponents(controlador.getCedulaEncargado());
     }
     
     private void initComponents(String cedulaEncargado){
