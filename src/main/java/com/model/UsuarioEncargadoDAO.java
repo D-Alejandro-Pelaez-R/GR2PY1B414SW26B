@@ -24,18 +24,6 @@ public class UsuarioEncargadoDAO {
     }
     
     /**
-     * Registra un nuevo usuario encargado evitando duplicados por cédula 
-     */
-    public void agregarEncargado(UsuarioEncargado encargado){
-        for (int i = 0; i < listadoEncargados.size(); i++) {
-            if (listadoEncargados.get(i).getCedula().equals(encargado.getCedula())) {
-                return;
-            }
-        }
-        this.listadoEncargados.add(encargado);
-    }
-    
-    /**
      * Busca y retorna un usuario encargado mediante su cédula 
      */
     public UsuarioEncargado obtenerEncargado(String cedula){
@@ -47,18 +35,6 @@ public class UsuarioEncargadoDAO {
         return null;
     }
     
-    /**
-     * Elimina un usuario encargado de la lista utilizando su cédula 
-     */
-    public void eliminarEncargado(String cedula){
-        for (int i = 0; i < listadoEncargados.size(); i++) {
-            if (listadoEncargados.get(i).getCedula().equals(cedula)) {
-                listadoEncargados.remove(i);
-                return;
-            }
-        }
-    }
-
     public UsuarioEncargado read(String cedula) {
         return obtenerEncargado(cedula);
     }
