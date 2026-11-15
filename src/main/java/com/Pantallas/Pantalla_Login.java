@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.Pantallas;
+
+import com.controladores.controladorLogin;
 import com.gui.*;
 import com.model.*;
 import java.util.ArrayList;
@@ -13,15 +15,16 @@ import javax.swing.JOptionPane;
  * @author Usuario
  */
 public class Pantalla_Login extends javax.swing.JFrame {
-    UsuarioEncargado Admin = new UsuarioEncargado("1004339824", "2634");
-    ArrayList<UsuarioEncargado> ListaEncargados = new ArrayList<>();
-    int contEncargado = 1;
+    
+    private controladorLogin controlador = new controladorLogin();
+    
     /**
      * Creates new form Pantalla_Login
      */
+    
     public Pantalla_Login() {
         initComponents();
-          ListaEncargados.add(Admin);
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -99,29 +102,28 @@ public class Pantalla_Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBIngresarActionPerformed
-        // TODO add your handling code here:
+     // 1. Capturamos los datos
         String cedEncargado = jTCedula.getText().trim();
-        String contraseniaEncargado = new String(jPContrasenia.getPassword());
-        boolean acceso = false;
+        String contraseniaEncargado = new String(jPContrasenia.getPassword()).trim();
 
-        for (int i = 0; i < ListaEncargados.size(); i++) {
-            if (cedEncargado.equals(ListaEncargados.get(i).getCedula())
-                && contraseniaEncargado.equals(ListaEncargados.get(i).getContrasena())) {
-                acceso = true;
-                GUIMenu menu = new GUIMenu(cedEncargado);
-                menu.setVisible(true);
-                menu.setLocationRelativeTo(null);
-                this.dispose();
-            break;
-        }
+        if (cedEncargado.isEmpty() || contraseniaEncargado.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor ingrese la cédula y la contraseña.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
         }
 
-        if (!acceso) {
-        JOptionPane.showMessageDialog(this, "Usuario o clave incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+        // 2. Validamos a través del controlador (que a su vez consulta el DAO y la lista)
+        boolean acceso = controlador.validarEncargado(cedEncargado, contraseniaEncargado);
+
+        // 3. Evaluamos el resultado
+        if (acceso) {
+         JOptionPane.showMessageDialog(this, "Acceso Concedido", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+         GUIMenu menu = new GUIMenu(cedEncargado);
+         menu.setVisible(true);
+         menu.setLocationRelativeTo(null);
+         this.dispose(); // Cierra el login
+        } else {
+            JOptionPane.showMessageDialog(this, "Usuario o clave incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        
-        
-        
     }//GEN-LAST:event_jBIngresarActionPerformed
 
     /**
