@@ -58,8 +58,4 @@ public class UsuarioEncargadoDAO {
             }
         }
     }
-
-    public UsuarioEncargado read(String cedula) {
-        return obtenerEncargado(cedula);
-    }
 }

@@ -26,7 +26,7 @@ public class controladorLogin {
      */
     public boolean validarEncargado(String cedula, String clave){
         //leer cedula
-        UsuarioEncargado encargado = usuarioEncargadoDAO.read(cedula);
+        UsuarioEncargado encargado = usuarioEncargadoDAO.obtenerEncargado(cedula);
         
         if(encargado != null && encargado.getContrasena().equals(clave)){
             return true;
