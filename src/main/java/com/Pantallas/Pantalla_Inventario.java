@@ -5,6 +5,16 @@ import com.model.Producto;
 import com.model.ProductoDAO;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 /**
  * Pantalla de inventario de la ferretería: muestra el listado de productos
@@ -51,6 +61,98 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
                 p.getStock()
             });
         }
+    }
+    
+    /**
+     * Abre un cuadro de diálogo modal para añadir (si producto es null)
+     * o modificar (si producto no es null) un producto del inventario.
+     */
+    private Producto mostrarDialogoProducto(Producto producto) {
+        final Producto[] resultado = { null };
+
+        JDialog dialogo = new JDialog(this, true);
+        dialogo.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dialogo.setLayout(new BorderLayout());
+
+        JPanel jPCampos = new JPanel(new GridLayout(5, 2, 10, 10));
+        jPCampos.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+
+        JTextField jTId = new JTextField();
+        JTextField jTNombre = new JTextField();
+        JTextField jTDescripcion = new JTextField();
+        JTextField jTPrecio = new JTextField();
+        JTextField jTStock = new JTextField();
+
+        jPCampos.add(new JLabel("ID:"));
+        jPCampos.add(jTId);
+        jPCampos.add(new JLabel("Nombre:"));
+        jPCampos.add(jTNombre);
+        jPCampos.add(new JLabel("Descripción:"));
+        jPCampos.add(jTDescripcion);
+        jPCampos.add(new JLabel("Precio:"));
+        jPCampos.add(jTPrecio);
+        jPCampos.add(new JLabel("Stock:"));
+        jPCampos.add(jTStock);
+
+        JPanel jPBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        JButton jBGuardar = new JButton("Guardar");
+        JButton jBCancelar = new JButton("Cancelar");
+        jPBotones.add(jBGuardar);
+        jPBotones.add(jBCancelar);
+
+        dialogo.add(jPCampos, BorderLayout.CENTER);
+        dialogo.add(jPBotones, BorderLayout.SOUTH);
+
+        if (producto != null) {
+            dialogo.setTitle("Modificar producto");
+            jTId.setText(producto.getIdProducto());
+            jTId.setEditable(false);
+            jTNombre.setText(producto.getNombre());
+            jTDescripcion.setText(producto.getDescripcion());
+            jTPrecio.setText(String.valueOf(producto.getPrecio()));
+            jTStock.setText(String.valueOf(producto.getStock()));
+        } else {
+            dialogo.setTitle("Añadir producto");
+        }
+
+        jBGuardar.addActionListener(evt -> {
+            String id = jTId.getText().trim();
+            String nombre = jTNombre.getText().trim();
+            String descripcion = jTDescripcion.getText().trim();
+
+            if (id.isEmpty() || nombre.isEmpty()) {
+                JOptionPane.showMessageDialog(dialogo, "El ID y el nombre son obligatorios.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                double precio = Double.parseDouble(jTPrecio.getText().trim().replace(',', '.'));
+                int stock = Integer.parseInt(jTStock.getText().trim());
+                if (precio < 0 || stock < 0) {
+                    JOptionPane.showMessageDialog(dialogo, "El precio y el stock no pueden ser negativos.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                resultado[0] = new Producto(id, nombre, descripcion, precio, stock);
+                dialogo.dispose();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialogo,
+                        "El precio debe ser un número y el stock un número entero.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        jBCancelar.addActionListener(evt -> {
+            resultado[0] = null;
+            dialogo.dispose();
+        });
+
+        dialogo.pack();
+        dialogo.setSize(420, 320);
+        dialogo.setLocationRelativeTo(this);
+        dialogo.setVisible(true);
+
+        return resultado[0];
     }
 
     /**
@@ -131,11 +233,8 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBAniadirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAniadirActionPerformed
-        // Abre la ventana con los campos vacíos
-        Pantalla_Producto ventana = new Pantalla_Producto(this, true, null);
-        ventana.setVisible(true);
-
-        Producto nuevo = ventana.getResultado();
+        // Abre el diálogo con los campos vacíos
+        Producto nuevo = mostrarDialogoProducto(null);
         if (nuevo == null) {
             return; // se canceló
         }
@@ -188,11 +287,8 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        // Abre la ventana con la información actual del producto
-        Pantalla_Producto ventana = new Pantalla_Producto(this, true, p);
-        ventana.setVisible(true);
-
-        Producto modificado = ventana.getResultado();
+        // Abre el diálogo con la información actual del producto
+        Producto modificado = mostrarDialogoProducto(p);
         if (modificado != null) {
             controlador.actualizarProducto(modificado);
             cargarTabla();
