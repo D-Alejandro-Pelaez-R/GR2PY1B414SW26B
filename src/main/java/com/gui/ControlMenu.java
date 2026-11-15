@@ -4,7 +4,6 @@
  */
 package com.gui;
 import com.Pantallas.Pantalla_Login;
-import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 
