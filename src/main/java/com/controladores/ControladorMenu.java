@@ -16,10 +16,12 @@ public class ControladorMenu {
     
     private String cedulaEncargado;
     private final controladorInventario ctrlInventario;
+    private final generarFactura crtlFactura;
     private Runnable onCerrarSesion;
     
-    public ControladorMenu(controladorInventario ctrlInventario) {
+    public ControladorMenu(controladorInventario ctrlInventario, generarFactura ctrlFactura) {
         this.ctrlInventario = ctrlInventario;
+        this.crtlFactura = ctrlFactura;
     }
     
     public void setCedulaEncargado(String cedulaEncargado) {
@@ -35,18 +37,19 @@ public class ControladorMenu {
     }
 
     public void abrirGUIFactura(JFrame ventanaMenu) {
-        // Ocultamos el menú principal
+        // Se oculta el menú principal
         ventanaMenu.setVisible(false);
         
         // Abrimos la Factura pasándole la cédula y la referencia del menú para poder volver
-        Pantalla_Factura ventanaFactura = new Pantalla_Factura(cedulaEncargado, ventanaMenu);
+        Pantalla_Factura ventanaFactura = new Pantalla_Factura(this.crtlFactura, cedulaEncargado, ventanaMenu);
  
-        //conexion del boton Regresar
-        ventanaFactura.agregarListenerRegresar(e -> {
-            if (ventanaMenu != null) {
-                ventanaMenu.setVisible(true); // Vuelve a mostrar el menú principal
+        ventanaFactura.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if (ventanaMenu != null && !ventanaMenu.isVisible()) {
+                    ventanaMenu.setVisible(true);
+                }
             }
-            ventanaFactura.dispose(); // Cierra y destruye la ventana de factura actual
         });
   
         ventanaFactura.setVisible(true);
