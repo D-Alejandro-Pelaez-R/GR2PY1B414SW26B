@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+
 /**
  * Pantalla de inventario de la ferretería: muestra el listado de productos
  * y permite añadir, eliminar (por ID) y modificar (por ID) productos.
@@ -52,6 +53,23 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
         }
     }
     
+    /**
+ * Genera el siguiente ID disponible con formato F001, F002, ...
+ */
+private String generarNuevoId() {
+    java.util.Set<Integer> usados = new java.util.HashSet<>();
+    for (Producto p : controlador.obtenerListadoProductos()) {
+        String id = p.getIdProducto();
+        if (id != null && id.matches("F\\d+")) {
+            usados.add(Integer.parseInt(id.substring(1)));
+        }
+    }
+    int n = 1;
+    while (usados.contains(n)) {
+        n++;
+    }
+    return String.format("F%03d", n);
+}
     /**
      * Abre un cuadro de diálogo modal para añadir (si producto es null)
      * o modificar (si producto no es null) un producto del inventario.
@@ -102,6 +120,8 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
             jTStock.setText(String.valueOf(producto.getStock()));
         } else {
             dialogo.setTitle("Añadir producto");
+            jTId.setText(generarNuevoId());
+            jTId.setEditable(false);
         }
 
         jBGuardar.addActionListener(evt -> {
@@ -160,6 +180,7 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
         jBAniadir = new javax.swing.JButton();
         jBEliminar = new javax.swing.JButton();
         jBModificar = new javax.swing.JButton();
+        jBRegresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Ferretería - Inventario");
@@ -190,8 +211,6 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        jPBotones.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 20, 10));
-
         jBAniadir.setText("Añadir producto");
         jBAniadir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -215,6 +234,14 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
             }
         });
         jPBotones.add(jBModificar);
+
+        jBRegresar.setText("Regresar al menu");
+        jBRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBRegresarActionPerformed(evt);
+            }
+        });
+        jPBotones.add(jBRegresar);
 
         getContentPane().add(jPBotones, java.awt.BorderLayout.SOUTH);
 
@@ -286,10 +313,16 @@ public class Pantalla_Inventario extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jBModificarActionPerformed
 
+    private void jBRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBRegresarActionPerformed
+        // TODO add your handling code here:
+        this.dispose(); // cierra la pantalla de inventario
+    }//GEN-LAST:event_jBRegresarActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBAniadir;
     private javax.swing.JButton jBEliminar;
     private javax.swing.JButton jBModificar;
+    private javax.swing.JButton jBRegresar;
     private javax.swing.JLabel jLTitulo;
     private javax.swing.JPanel jPBotones;
     private javax.swing.JScrollPane jScrollPane1;
