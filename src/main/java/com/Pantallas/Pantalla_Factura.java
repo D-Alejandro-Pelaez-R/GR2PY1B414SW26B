@@ -219,12 +219,12 @@ public class Pantalla_Factura extends JFrame{
                     "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        if (!cedula.matches("[0-9]{10}")) {
-    JOptionPane.showMessageDialog(this,
-            "La cédula debe contener exactamente 10 números.",
-            "Error", JOptionPane.ERROR_MESSAGE);
-    return;
-}
+        
+        // Validar cédula ecuatoriana
+        if (!esCedulaValida(cedula)) {
+         JOptionPane.showMessageDialog(this, "Cédula inválida.", "Error de cédula", JOptionPane.ERROR_MESSAGE);
+         return;
+     }
 
         if (controlador.obtenerListadoProductos().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debe añadir al menos un producto.",
@@ -251,6 +251,33 @@ public class Pantalla_Factura extends JFrame{
                     "Factura #" + factura.getIdFactura() + " creada correctamente.",
                     "Éxito", JOptionPane.INFORMATION_MESSAGE);
         }
+    }
+    
+    private boolean esCedulaValida(String cedula) {
+        if (cedula.length() == 10 && cedula.matches("[0-9]+")) {
+            if ((Integer.parseInt(cedula.substring(0, 2))) >= 0 && (Integer.parseInt(cedula.substring(0, 2))) <= 24) {
+                if (Character.getNumericValue(cedula.charAt(2)) < 6) {
+                    int suma = 0;
+                    for (int cont = 0; cont < (cedula.length() - 1); cont++) {
+                        if (cont % 2 == 0) {
+                            if (((Character.getNumericValue(cedula.charAt(cont))) * 2) > 9) {
+                                suma = suma + ((2 * (Character.getNumericValue(cedula.charAt(cont)))) - 9);
+                            } else {
+                                suma = suma + 2 * (Character.getNumericValue(cedula.charAt(cont)));
+                            }
+                        } else {
+                            suma = suma + (Character.getNumericValue(cedula.charAt(cont)));
+                        }
+                    }
+                    int decSup = ((suma / 10) + 1) * 10;
+                    int digitoVerificador = (decSup - suma) % 10;
+                    if (Character.getNumericValue(cedula.charAt(9)) == digitoVerificador) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
