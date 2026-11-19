@@ -234,18 +234,13 @@ public class Pantalla_Factura extends JFrame{
 
         Cliente cliente = controlador.obtenerCliente(cedula);
         if (cliente == null) {
-            int opcion = JOptionPane.showConfirmDialog(this,
-                    "El cliente no está registrado. ¿Desea registrarlo ahora?",
-                    "Cliente no encontrado", JOptionPane.YES_NO_OPTION);
-            if (opcion == JOptionPane.YES_OPTION) {
-                Cliente nuevo = mostrarDialogoNuevoCliente(cedula);
-                if (nuevo == null) {
-                    return;
-                }
-                controlador.registrarCliente(nuevo);
-            } else {
+            Cliente nuevo = mostrarDialogoNuevoCliente(cedula);
+            if(nuevo == null){
                 return;
             }
+            controlador.registrarCliente(nuevo);
+            cedula = nuevo.getCedula();
+            txtCedulaCliente.setText(cedula);
         }
 
         Factura factura = controlador.generarFactura(cedula);
