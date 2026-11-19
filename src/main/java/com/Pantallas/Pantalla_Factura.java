@@ -219,6 +219,12 @@ public class Pantalla_Factura extends JFrame{
                     "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        if (!cedula.matches("[0-9]{10}")) {
+    JOptionPane.showMessageDialog(this,
+            "La cédula debe contener exactamente 10 números.",
+            "Error", JOptionPane.ERROR_MESSAGE);
+    return;
+}
 
         if (controlador.obtenerListadoProductos().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debe añadir al menos un producto.",
@@ -292,21 +298,44 @@ public class Pantalla_Factura extends JFrame{
         panelBotones.add(btnGuardar);
         panelBotones.add(btnCancelar);
 
-        btnGuardar.addActionListener(e -> {
-            if (txtNombre.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(dialogo, "El nombre es obligatorio.",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            resultado[0] = new Cliente(
-                    cedula,
-                    txtNombre.getText().trim(),
-                    txtTelefono.getText().trim(),
-                    txtDireccion.getText().trim(),
-                    txtCorreo.getText().trim()
-            );
-            dialogo.dispose();
-        });
+       btnGuardar.addActionListener(e -> {
+
+    String nombre = txtNombre.getText().trim();
+    String telefono = txtTelefono.getText().trim();
+
+    // Validar nombre
+    if (nombre.isEmpty()) {
+        JOptionPane.showMessageDialog(dialogo,
+                "El nombre es obligatorio.",
+                "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    if (!nombre.matches("[\\p{L} ]+")) {
+        JOptionPane.showMessageDialog(dialogo,
+                "El nombre no puede contener números ni caracteres especiales.",
+                "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Validar teléfono
+    if (!telefono.matches("09[0-9]{8}")) {
+        JOptionPane.showMessageDialog(dialogo,
+                "El celular debe comenzar con 09 y contener exactamente 10 números.",
+                "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    resultado[0] = new Cliente(
+            cedula,
+            nombre,
+            telefono,
+            txtDireccion.getText().trim(),
+            txtCorreo.getText().trim()
+    );
+
+    dialogo.dispose();
+});
 
         btnCancelar.addActionListener(e -> dialogo.dispose());
 

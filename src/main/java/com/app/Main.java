@@ -1,4 +1,4 @@
-package com.Pantallas.app;
+package com.app;
 
 import com.Pantallas.Pantalla_Login;
 import com.Pantallas.Pantalla_Menu;
