@@ -58,32 +58,4 @@ public class ClienteDAO {
         return -1;
     }
     
-    /**
-     * Retorna la lista completa de clientes registrados.
-     */
-    public ArrayList<Cliente> getListadoClientes(){
-        return this.listadoClientes;
-    }
-    
-    /**
-     * Actualiza la información de un cliente existente buscando por su cédula
-     */
-    public void actualizarCliente(Cliente cliente){
-        int index = obtenerIndiceCliente(cliente.getCedula());
-        if (index != -1) {
-            listadoClientes.set(index, cliente);
-        }
-    }
-    
-    /**
-     * Elimina un cliente de la lista utilizando su número de cédula.
-     */
-    public void eliminarCliente(String cedula){
-        for (int i = 0; i < listadoClientes.size(); i++) {
-            if (listadoClientes.get(i).getCedula().equals(cedula)) {
-                listadoClientes.remove(i);
-                return;
-            }
-        }
-    }
 }

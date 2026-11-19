@@ -9,7 +9,7 @@ import java.util.function.Consumer;
  * @author DELL
  */
 public class controladorLogin {
-    private UsuarioEncargadoDAO usuarioEncargadoDAO;
+    private final UsuarioEncargadoDAO usuarioEncargadoDAO;
     private final Consumer<String> onLoginExitoso;
     
     public controladorLogin(Consumer<String> onLoginExitoso) {
