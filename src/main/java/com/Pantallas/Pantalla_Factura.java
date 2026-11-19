@@ -221,10 +221,35 @@ public class Pantalla_Factura extends JFrame{
         }
         
         // Validar cédula ecuatoriana
-        if (!esCedulaValida(cedula)) {
-         JOptionPane.showMessageDialog(this, "Cédula inválida.", "Error de cédula", JOptionPane.ERROR_MESSAGE);
-         return;
-     }
+        boolean cedulaValida = false;
+        if (cedula.length() == 10 && cedula.matches("[0-9]+")) {
+            if ((Integer.parseInt(cedula.substring(0, 2))) >= 0 && (Integer.parseInt(cedula.substring(0, 2))) <= 24) {
+                if (Character.getNumericValue(cedula.charAt(2)) < 6) {
+                    int suma = 0;
+                    for (int cont = 0; cont < (cedula.length() - 1); cont++) {
+                        if (cont % 2 == 0) {
+                            if (((Character.getNumericValue(cedula.charAt(cont))) * 2) > 9) {
+                                suma = suma + ((2 * (Character.getNumericValue(cedula.charAt(cont)))) - 9);
+                            } else {
+                                suma = suma + 2 * (Character.getNumericValue(cedula.charAt(cont)));
+                            }
+                        } else {
+                            suma = suma + (Character.getNumericValue(cedula.charAt(cont)));
+                        }
+                    }
+                    int decSup = ((suma / 10) + 1) * 10;
+                    int digitoVerificador = (decSup - suma) % 10;
+                    if (Character.getNumericValue(cedula.charAt(9)) == digitoVerificador) {
+                        cedulaValida = true;
+                    }
+                }
+            }
+        }
+
+        if (!cedulaValida) {
+            JOptionPane.showMessageDialog(this, "Cédula inválida.", "Error de cédula", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         if (controlador.obtenerListadoProductos().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debe añadir al menos un producto.",
@@ -253,33 +278,6 @@ public class Pantalla_Factura extends JFrame{
         }
     }
     
-    private boolean esCedulaValida(String cedula) {
-        if (cedula.length() == 10 && cedula.matches("[0-9]+")) {
-            if ((Integer.parseInt(cedula.substring(0, 2))) >= 0 && (Integer.parseInt(cedula.substring(0, 2))) <= 24) {
-                if (Character.getNumericValue(cedula.charAt(2)) < 6) {
-                    int suma = 0;
-                    for (int cont = 0; cont < (cedula.length() - 1); cont++) {
-                        if (cont % 2 == 0) {
-                            if (((Character.getNumericValue(cedula.charAt(cont))) * 2) > 9) {
-                                suma = suma + ((2 * (Character.getNumericValue(cedula.charAt(cont)))) - 9);
-                            } else {
-                                suma = suma + 2 * (Character.getNumericValue(cedula.charAt(cont)));
-                            }
-                        } else {
-                            suma = suma + (Character.getNumericValue(cedula.charAt(cont)));
-                        }
-                    }
-                    int decSup = ((suma / 10) + 1) * 10;
-                    int digitoVerificador = (decSup - suma) % 10;
-                    if (Character.getNumericValue(cedula.charAt(9)) == digitoVerificador) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     /**
      * Abre un cuadro de diálogo modal para ingresar los datos personales de 
      * un nuevo cliente cuando su cédula no esta en el DAO.
@@ -324,6 +322,7 @@ public class Pantalla_Factura extends JFrame{
 
     String nombre = txtNombre.getText().trim();
     String telefono = txtTelefono.getText().trim();
+    String correo = txtCorreo.getText().trim();
 
     // Validar nombre
     if (nombre.isEmpty()) {
@@ -347,6 +346,14 @@ public class Pantalla_Factura extends JFrame{
                 "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
+    
+    // Validar correo electrónico
+            if (correo.isEmpty() || !correo.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+                JOptionPane.showMessageDialog(dialogo,
+                        "Ingrese un correo electrónico válido.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
     resultado[0] = new Cliente(
             cedula,

@@ -105,10 +105,34 @@ public class Pantalla_Login extends javax.swing.JFrame {
            return;
        }
       // Validar cédula ecuatoriana
-      if (!esCedulaValida(cedEncargado)) {
-         JOptionPane.showMessageDialog(this, "Cédula inválida.", "Error de cédula", JOptionPane.ERROR_MESSAGE);
-         return;
-     }
+      boolean cedulaValida = false;
+        if (cedEncargado.length() == 10 && cedEncargado.matches("[0-9]+")) {
+            if ((Integer.parseInt(cedEncargado.substring(0, 2))) >= 0 && (Integer.parseInt(cedEncargado.substring(0, 2))) <= 24) {
+                if (Character.getNumericValue(cedEncargado.charAt(2)) < 6) {
+                    int suma = 0;
+                    for (int cont = 0; cont < (cedEncargado.length() - 1); cont++) {
+                        if (cont % 2 == 0) {
+                            if (((Character.getNumericValue(cedEncargado.charAt(cont))) * 2) > 9) {
+                                suma = suma + ((2 * (Character.getNumericValue(cedEncargado.charAt(cont)))) - 9);
+                            } else {
+                                suma = suma + 2 * (Character.getNumericValue(cedEncargado.charAt(cont)));
+                            }
+                        } else {
+                            suma = suma + (Character.getNumericValue(cedEncargado.charAt(cont)));
+                        }
+                    }
+                    int decSup = ((suma / 10) + 1) * 10;
+                    int digitoVerificador = (decSup - suma) % 10;
+                    if (Character.getNumericValue(cedEncargado.charAt(9)) == digitoVerificador) {
+                        cedulaValida = true;
+                    }
+                }
+            }
+        }
+        if (!cedulaValida) {
+            JOptionPane.showMessageDialog(this, "Cédula inválida.", "Error de cédula", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
        // 2. Validamos a través del controlador (que a su vez consulta el DAO y la lista)
        boolean acceso = controlador.validarEncargado(cedEncargado, contraseniaEncargado);
@@ -122,33 +146,6 @@ public class Pantalla_Login extends javax.swing.JFrame {
            JOptionPane.showMessageDialog(this, "Usuario o clave incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
        }
     }//GEN-LAST:event_jBIngresarActionPerformed
-    
-    private boolean esCedulaValida(String cedula) {
-        if (cedula.length() == 10 && cedula.matches("[0-9]+")) {
-            if ((Integer.parseInt(cedula.substring(0, 2))) >= 0 && (Integer.parseInt(cedula.substring(0, 2))) <= 24) {
-                if (Character.getNumericValue(cedula.charAt(2)) < 6) {
-                    int suma = 0;
-                    for (int cont = 0; cont < (cedula.length() - 1); cont++) {
-                        if (cont % 2 == 0) {
-                            if (((Character.getNumericValue(cedula.charAt(cont))) * 2) > 9) {
-                                suma = suma + ((2 * (Character.getNumericValue(cedula.charAt(cont)))) - 9);
-                            } else {
-                                suma = suma + 2 * (Character.getNumericValue(cedula.charAt(cont)));
-                            }
-                        } else {
-                            suma = suma + (Character.getNumericValue(cedula.charAt(cont)));
-                        }
-                    }
-                    int decSup = ((suma / 10) + 1) * 10;
-                    int digitoVerificador = (decSup - suma) % 10;
-                    if (Character.getNumericValue(cedula.charAt(9)) == digitoVerificador) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBIngresar;

@@ -21,6 +21,11 @@ public class UsuarioEncargadoDAO {
         this.listadoEncargados = new ArrayList<>(); 
                 // por defecto
         this.listadoEncargados.add(new UsuarioEncargado("1004339824", "2634"));
+        this.listadoEncargados.add(new UsuarioEncargado("1150634762", "epn"));
+        this.listadoEncargados.add(new UsuarioEncargado("0605625599", "epn"));
+        this.listadoEncargados.add(new UsuarioEncargado("1752868420", "epn"));
+        this.listadoEncargados.add(new UsuarioEncargado("1755013230", "epn"));
+        
     }
     
     /**
