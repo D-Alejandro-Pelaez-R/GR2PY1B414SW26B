@@ -223,6 +223,12 @@ public class Pantalla_Factura extends JFrame {
                     "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        if (!cedula.matches("[0-9]{10}")) {
+    JOptionPane.showMessageDialog(this,
+            "La cédula debe contener exactamente 10 números.",
+            "Error", JOptionPane.ERROR_MESSAGE);
+    return;
+}
 
         if (controlador.obtenerListadoProductos().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Debe añadir al menos un producto.",
@@ -291,157 +297,44 @@ public class Pantalla_Factura extends JFrame {
         panelBotones.add(btnGuardar);
         panelBotones.add(btnCancelar);
 
-        // Ventana flotante de aviso posicionada justo debajo del cuadro del diálogo
-        JWindow avisoDebajo = new JWindow(dialogo);
-        JLabel lblAviso = new JLabel("", SwingConstants.CENTER);
-        lblAviso.setForeground(Color.RED);
-        lblAviso.setFont(new Font("SansSerif", Font.BOLD, 12));
-        lblAviso.setOpaque(true);
-        lblAviso.setBackground(new Color(255, 240, 240));
-        lblAviso.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.RED, 1),
-                BorderFactory.createEmptyBorder(6, 10, 6, 10)
-        ));
-        avisoDebajo.getContentPane().add(lblAviso);
+       btnGuardar.addActionListener(e -> {
 
-        Runnable mostrarAvisoDebajo = () -> {
-            if (!dialogo.isVisible()) {
-                return;
-            }
-            avisoDebajo.pack();
-            int x = dialogo.getX();
-            int y = dialogo.getY() + dialogo.getHeight() + 4;
-            avisoDebajo.setSize(Math.max(dialogo.getWidth(), avisoDebajo.getWidth()), avisoDebajo.getHeight());
-            avisoDebajo.setLocation(x, y);
-            avisoDebajo.setVisible(true);
-        };
+    String nombre = txtNombre.getText().trim();
+    String telefono = txtTelefono.getText().trim();
 
-        Runnable ocultarAvisoDebajo = () -> avisoDebajo.setVisible(false);
+    // Validar nombre
+    if (nombre.isEmpty()) {
+        JOptionPane.showMessageDialog(dialogo,
+                "El nombre es obligatorio.",
+                "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-        // Filtro reutilizable: delimita a máximo 10 dígitos y solo permite números
-        DocumentFilter filtroDiezDigitosNumericos = new DocumentFilter() {
-            private final String mensajeSoloNumeros;
+    if (!nombre.matches("[\\p{L} ]+")) {
+        JOptionPane.showMessageDialog(dialogo,
+                "El nombre no puede contener números ni caracteres especiales.",
+                "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-            {
-                mensajeSoloNumeros = "Solo debe contener números.";
-            }
+    // Validar teléfono
+    if (!telefono.matches("09[0-9]{8}")) {
+        JOptionPane.showMessageDialog(dialogo,
+                "El celular debe comenzar con 09 y contener exactamente 10 números.",
+                "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-            @Override
-            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
-                    throws BadLocationException {
-                if (string == null) {
-                    return;
-                }
-                if (!string.matches("\\d*")) {
-                    lblAviso.setText(mensajeSoloNumeros);
-                    mostrarAvisoDebajo.run();
-                    return;
-                }
-                if (fb.getDocument().getLength() + string.length() <= 10) {
-                    ocultarAvisoDebajo.run();
-                    super.insertString(fb, offset, string, attr);
-                }
-            }
+    resultado[0] = new Cliente(
+            cedula,
+            nombre,
+            telefono,
+            txtDireccion.getText().trim(),
+            txtCorreo.getText().trim()
+    );
 
-            @Override
-            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
-                    throws BadLocationException {
-                if (text == null) {
-                    return;
-                }
-                if (!text.matches("\\d*")) {
-                    lblAviso.setText(mensajeSoloNumeros);
-                    mostrarAvisoDebajo.run();
-                    return;
-                }
-                int nuevaLongitud = fb.getDocument().getLength() - length + text.length();
-                if (nuevaLongitud <= 10) {
-                    ocultarAvisoDebajo.run();
-                    super.replace(fb, offset, length, text, attrs);
-                }
-            }
-        };
-
-        ((AbstractDocument) txtCed.getDocument()).setDocumentFilter(filtroDiezDigitosNumericos);
-        ((AbstractDocument) txtTelefono.getDocument()).setDocumentFilter(filtroDiezDigitosNumericos);
-
-        // Prellena con los dígitos válidos (máx. 10) de la cédula ingresada
-        String cedulaLimpia = cedula == null ? "" : cedula.replaceAll("\\D", "");
-        if (cedulaLimpia.length() > 10) {
-            cedulaLimpia = cedulaLimpia.substring(0, 10);
-        }
-        txtCed.setText(cedulaLimpia);
-
-        btnGuardar.addActionListener(e -> {
-            String cedIngresada = txtCed.getText().trim();
-            String nombre = txtNombre.getText().trim();
-            String telefonoStr = txtTelefono.getText().trim();
-            String direccion = txtDireccion.getText().trim();
-            String correo = txtCorreo.getText().trim();
-
-            // 1. Cédula: solo números (try-catch) y 10 dígitos
-            try {
-                if (!cedIngresada.matches("\\d+")) {
-                    throw new NumberFormatException();
-                }
-                Long.parseLong(cedIngresada);
-                if (cedIngresada.length() != 10) {
-                    lblAviso.setText("La cédula debe tener 10 dígitos.");
-                    mostrarAvisoDebajo.run();
-                    return;
-                }
-            } catch (NumberFormatException ex) {
-                lblAviso.setText("La cédula solo debe contener números.");
-                mostrarAvisoDebajo.run();
-                return;
-            }
-
-            if (nombre.isEmpty()) {
-                lblAviso.setText("El nombre es obligatorio.");
-                mostrarAvisoDebajo.run();
-                return;
-            }
-
-            // 2. Teléfono: solo números (try-catch) y máximo 10 dígitos
-            try {
-                if (telefonoStr.isEmpty()) {
-                    lblAviso.setText("Ingrese el teléfono.");
-                    mostrarAvisoDebajo.run();
-                    return;
-                }
-                if (!telefonoStr.matches("\\d+")) {
-                    throw new NumberFormatException();
-                }
-                Long.parseLong(telefonoStr);
-                if (telefonoStr.length() > 10) {
-                    lblAviso.setText("El teléfono debe tener máximo 10 dígitos.");
-                    mostrarAvisoDebajo.run();
-                    return;
-                }
-            } catch (NumberFormatException ex) {
-                lblAviso.setText("El teléfono solo debe contener números.");
-                mostrarAvisoDebajo.run();
-                return;
-            }
-
-            // 3. Correo electrónico
-            if (correo.isEmpty() || !correo.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
-                lblAviso.setText("Ingrese un correo electrónico válido.");
-                mostrarAvisoDebajo.run();
-                return;
-            }
-
-            ocultarAvisoDebajo.run();
-            avisoDebajo.dispose();
-            resultado[0] = new Cliente(
-                    cedIngresada,
-                    nombre,
-                    telefonoStr,
-                    direccion,
-                    correo
-            );
-            dialogo.dispose();
-        });
+    dialogo.dispose();
+});
 
         btnCancelar.addActionListener(e -> {
             ocultarAvisoDebajo.run();

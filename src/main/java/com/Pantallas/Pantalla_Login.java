@@ -104,7 +104,13 @@ public class Pantalla_Login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Por favor ingrese la cédula y la contraseña.", "Advertencia", JOptionPane.WARNING_MESSAGE);
             return;
         }
-
+        // Validar que la cédula tenga únicamente números y 10 dígitos
+      if (!cedEncargado.matches("[0-9]{10}")) {
+          JOptionPane.showMessageDialog(this,
+            "La cedula debe contener exactamente 10 numeros.",
+            "Error de cedula", JOptionPane.ERROR_MESSAGE);
+      return;
+}
         // 2. Validamos a través del controlador (que a su vez consulta el DAO y la lista)
         boolean acceso = controlador.validarEncargado(cedEncargado, contraseniaEncargado);
 
