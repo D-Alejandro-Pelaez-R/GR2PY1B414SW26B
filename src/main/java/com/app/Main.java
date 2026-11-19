@@ -46,8 +46,10 @@ public class Main {
     }
     
     private static void cargarClientesIniciales(ClienteDAO dao) {
-        dao.agregarCliente(new Cliente("1712345678", "Carlos Pérez", "0991234567", "Av. Colón y 10 de Agosto", "carlos.perez@email.com"));
-        dao.agregarCliente(new Cliente("1798765432", "María Gómez", "0987654321", "Av. Amazonas N34-12", "maria.gomez@email.com"));
+        dao.agregarCliente(new Cliente("0401112313", "Carlos Pérez", "0991234567", "Av. Colón y 10 de Agosto", "carlos.perez@email.com"));
+        dao.agregarCliente(new Cliente("1101815510", "María Gómez", "0987654321", "Av. Amazonas N34-12", "maria.gomez@email.com"));
+        dao.agregarCliente(new Cliente("0605625599", "Misael Cuenca", "0992557104", "Av. Colón y 10 de Agosto", "carlos.perez@email.com"));
+
     }
     
 }
