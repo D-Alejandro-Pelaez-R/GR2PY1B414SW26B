@@ -10,22 +10,24 @@ import com.model.Factura;
 import com.model.Producto;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 
 import javax.swing.*;
-
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 /**
  *
  * @author DELL
  */
+public class Pantalla_Factura extends JFrame {
 
-public class Pantalla_Factura extends JFrame{
-    
     private final generarFactura controlador;
     private String cedulaEncargado;
     private JFrame ventanaMenu;
@@ -34,22 +36,23 @@ public class Pantalla_Factura extends JFrame{
     private JTextField txtCedulaCliente;
     private JTextField txtIdProducto;
     private JTextField txtCantidad;
-    
+
     private JButton btnAniadirProducto;
     private JButton btnCrearFactura;
     private JButton btnImprimirFactura;
     private JButton btnRegresar;
-    
+
     private JTextArea txtAreaDetalle;
-    
+
     /**
      * Inicia la ventana de facturacion, conecta con el controlador y nueva
      * sesion de factura.
-     * @param controlador instancia del controlador de facturacion 
+     *
+     * @param controlador instancia del controlador de facturacion
      * @param cedulaEncargado
-     * @param ventanaMenu 
+     * @param ventanaMenu
      */
-    public Pantalla_Factura(generarFactura controlador, String cedulaEncargado, JFrame ventanaMenu){
+    public Pantalla_Factura(generarFactura controlador, String cedulaEncargado, JFrame ventanaMenu) {
         this.controlador = controlador;
         this.cedulaEncargado = cedulaEncargado;
         this.ventanaMenu = ventanaMenu;
@@ -57,9 +60,9 @@ public class Pantalla_Factura extends JFrame{
         inicializarComponentes();
         configurarEventos();
     }
-    
+
     // Titulo
-    private void configurarVentana(){
+    private void configurarVentana() {
         setTitle("Sistema de Facturacion");
         setSize(450, 480);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -67,69 +70,69 @@ public class Pantalla_Factura extends JFrame{
         setResizable(false);
         setLayout(null);
     }
-    
+
     //Crea, posiciona y agrega todos los componentes graficos
-    private void inicializarComponentes(){
+    private void inicializarComponentes() {
         //Cedula
         JLabel lblCedula = new JLabel("Cedula Cliente:");
         lblCedula.setBounds(30, 25, 120, 25);
         add(lblCedula);
-        
-        txtCedulaCliente =  new JTextField();
-        txtCedulaCliente.setBounds(150,25,230,25);
+
+        txtCedulaCliente = new JTextField();
+        txtCedulaCliente.setBounds(150, 25, 230, 25);
         add(txtCedulaCliente);
-        
+
         //Producto
         JLabel lblProducto = new JLabel("ID Producto:");
-        lblProducto.setBounds(30,65,120,25);
+        lblProducto.setBounds(30, 65, 120, 25);
         add(lblProducto);
-        
-        txtIdProducto =  new JTextField();
-        txtIdProducto.setBounds(150,65,230,25);
+
+        txtIdProducto = new JTextField();
+        txtIdProducto.setBounds(150, 65, 230, 25);
         add(txtIdProducto);
-        
+
         //Cantidad
         JLabel lblCantidad = new JLabel("Cantidad:");
-        lblCantidad.setBounds(30,105,120,25);
+        lblCantidad.setBounds(30, 105, 120, 25);
         add(lblCantidad);
-        
-        txtCantidad =  new JTextField();
-        txtCantidad.setBounds(150,105,230,25);
+
+        txtCantidad = new JTextField();
+        txtCantidad.setBounds(150, 105, 230, 25);
         add(txtCantidad);
-        
+
         // Boton AñadirProducto
         btnAniadirProducto = new JButton("Añadir Producto:");
-        btnAniadirProducto.setBounds(30,150,170,35);
+        btnAniadirProducto.setBounds(30, 150, 170, 35);
         add(btnAniadirProducto);
-        
+
         // Boton Regresar Menu
         btnRegresar = new JButton("Regresar al Menu");
-        btnRegresar.setBounds(210,150,170,35);
+        btnRegresar.setBounds(210, 150, 170, 35);
         add(btnRegresar);
-        
+
         txtAreaDetalle = new JTextArea();
         txtAreaDetalle.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(txtAreaDetalle);
         scrollPane.setBounds(30, 205, 350, 150);
         add(scrollPane);
-                
+
         // Boton Crear Factura
         btnCrearFactura = new JButton("Crear Factura");
-        btnCrearFactura.setBounds(30,375,170,35);
+        btnCrearFactura.setBounds(30, 375, 170, 35);
         add(btnCrearFactura);
-        
-        
+
         // Boton Imprimir Factura
         btnImprimirFactura = new JButton("Imprimir Factura");
-        btnImprimirFactura.setBounds(210,375,170,35);
+        btnImprimirFactura.setBounds(210, 375, 170, 35);
         add(btnImprimirFactura);
     }
-    
+
     /**
      * ActionListener internos de los botones
-     * @return 
+     *
+     * @return
      */
-    private void configurarEventos(){
+    private void configurarEventos() {
         btnAniadirProducto.addActionListener(e -> accionAniadirProducto());
         btnCrearFactura.addActionListener(e -> accionCrearFactura());
         btnImprimirFactura.addActionListener(e -> mostrarVentanaImpresionFactura());
@@ -140,8 +143,9 @@ public class Pantalla_Factura extends JFrame{
             dispose();
         });
     }
+
     /**
-     * Captura el ID del producto y la cantidad ingresada, valida los datos 
+     * Captura el ID del producto y la cantidad ingresada, valida los datos
      * mediante el controlador y actualiza la lista visual de productos añadidos.
      */
     private void accionAniadirProducto() {
@@ -189,7 +193,7 @@ public class Pantalla_Factura extends JFrame{
     }
 
     /**
-     * Refresca el contenido del JTextArea mostrando los productos acumulados 
+     * Refresca el contenido del JTextArea mostrando los productos acumulados
      * hasta el momento y el total parcial calculado.
      */
     private void actualizarDetalleProductos() {
@@ -209,7 +213,7 @@ public class Pantalla_Factura extends JFrame{
     }
 
     /**
-     * Valida la cédula del cliente, gestiona su registro si no existe en 
+     * Valida la cédula del cliente, gestiona su registro si no existe en
      * el sistema y solicita al controlador la generación y almacenamiento.
      */
     private void accionCrearFactura() {
@@ -228,18 +232,13 @@ public class Pantalla_Factura extends JFrame{
 
         Cliente cliente = controlador.obtenerCliente(cedula);
         if (cliente == null) {
-            int opcion = JOptionPane.showConfirmDialog(this,
-                    "El cliente no está registrado. ¿Desea registrarlo ahora?",
-                    "Cliente no encontrado", JOptionPane.YES_NO_OPTION);
-            if (opcion == JOptionPane.YES_OPTION) {
-                Cliente nuevo = mostrarDialogoNuevoCliente(cedula);
-                if (nuevo == null) {
-                    return;
-                }
-                controlador.registrarCliente(nuevo);
-            } else {
+            Cliente nuevo = mostrarDialogoNuevoCliente(cedula);
+            if (nuevo == null) {
                 return;
             }
+            controlador.registrarCliente(nuevo);
+            cedula = nuevo.getCedula();
+            txtCedulaCliente.setText(cedula);
         }
 
         Factura factura = controlador.generarFactura(cedula);
@@ -253,7 +252,7 @@ public class Pantalla_Factura extends JFrame{
     }
 
     /**
-     * Abre un cuadro de diálogo modal para ingresar los datos personales de 
+     * Abre un cuadro de diálogo modal para ingresar los datos personales de
      * un nuevo cliente cuando su cédula no esta en el DAO.
      *
      * @param cedula número de cédula del cliente que se va a registrar
@@ -263,13 +262,13 @@ public class Pantalla_Factura extends JFrame{
         final Cliente[] resultado = { null };
 
         JDialog dialogo = new JDialog(this, "Registrar Cliente", true);
+        dialogo.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         dialogo.setLayout(new BorderLayout());
 
         JPanel panelCampos = new JPanel(new GridLayout(5, 2, 10, 10));
         panelCampos.setBorder(BorderFactory.createEmptyBorder(15, 15, 10, 15));
 
-        JTextField txtCed = new JTextField(cedula);
-        txtCed.setEditable(false);
+        JTextField txtCed = new JTextField();
         JTextField txtNombre = new JTextField();
         JTextField txtTelefono = new JTextField();
         JTextField txtDireccion = new JTextField();
@@ -292,23 +291,171 @@ public class Pantalla_Factura extends JFrame{
         panelBotones.add(btnGuardar);
         panelBotones.add(btnCancelar);
 
-        btnGuardar.addActionListener(e -> {
-            if (txtNombre.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(dialogo, "El nombre es obligatorio.",
-                        "Error", JOptionPane.ERROR_MESSAGE);
+        // Ventana flotante de aviso posicionada justo debajo del cuadro del diálogo
+        JWindow avisoDebajo = new JWindow(dialogo);
+        JLabel lblAviso = new JLabel("", SwingConstants.CENTER);
+        lblAviso.setForeground(Color.RED);
+        lblAviso.setFont(new Font("SansSerif", Font.BOLD, 12));
+        lblAviso.setOpaque(true);
+        lblAviso.setBackground(new Color(255, 240, 240));
+        lblAviso.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.RED, 1),
+                BorderFactory.createEmptyBorder(6, 10, 6, 10)
+        ));
+        avisoDebajo.getContentPane().add(lblAviso);
+
+        Runnable mostrarAvisoDebajo = () -> {
+            if (!dialogo.isVisible()) {
                 return;
             }
+            avisoDebajo.pack();
+            int x = dialogo.getX();
+            int y = dialogo.getY() + dialogo.getHeight() + 4;
+            avisoDebajo.setSize(Math.max(dialogo.getWidth(), avisoDebajo.getWidth()), avisoDebajo.getHeight());
+            avisoDebajo.setLocation(x, y);
+            avisoDebajo.setVisible(true);
+        };
+
+        Runnable ocultarAvisoDebajo = () -> avisoDebajo.setVisible(false);
+
+        // Filtro reutilizable: delimita a máximo 10 dígitos y solo permite números
+        DocumentFilter filtroDiezDigitosNumericos = new DocumentFilter() {
+            private final String mensajeSoloNumeros;
+
+            {
+                mensajeSoloNumeros = "Solo debe contener números.";
+            }
+
+            @Override
+            public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr)
+                    throws BadLocationException {
+                if (string == null) {
+                    return;
+                }
+                if (!string.matches("\\d*")) {
+                    lblAviso.setText(mensajeSoloNumeros);
+                    mostrarAvisoDebajo.run();
+                    return;
+                }
+                if (fb.getDocument().getLength() + string.length() <= 10) {
+                    ocultarAvisoDebajo.run();
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                if (text == null) {
+                    return;
+                }
+                if (!text.matches("\\d*")) {
+                    lblAviso.setText(mensajeSoloNumeros);
+                    mostrarAvisoDebajo.run();
+                    return;
+                }
+                int nuevaLongitud = fb.getDocument().getLength() - length + text.length();
+                if (nuevaLongitud <= 10) {
+                    ocultarAvisoDebajo.run();
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        };
+
+        ((AbstractDocument) txtCed.getDocument()).setDocumentFilter(filtroDiezDigitosNumericos);
+        ((AbstractDocument) txtTelefono.getDocument()).setDocumentFilter(filtroDiezDigitosNumericos);
+
+        // Prellena con los dígitos válidos (máx. 10) de la cédula ingresada
+        String cedulaLimpia = cedula == null ? "" : cedula.replaceAll("\\D", "");
+        if (cedulaLimpia.length() > 10) {
+            cedulaLimpia = cedulaLimpia.substring(0, 10);
+        }
+        txtCed.setText(cedulaLimpia);
+
+        btnGuardar.addActionListener(e -> {
+            String cedIngresada = txtCed.getText().trim();
+            String nombre = txtNombre.getText().trim();
+            String telefonoStr = txtTelefono.getText().trim();
+            String direccion = txtDireccion.getText().trim();
+            String correo = txtCorreo.getText().trim();
+
+            // 1. Cédula: solo números (try-catch) y 10 dígitos
+            try {
+                if (!cedIngresada.matches("\\d+")) {
+                    throw new NumberFormatException();
+                }
+                Long.parseLong(cedIngresada);
+                if (cedIngresada.length() != 10) {
+                    lblAviso.setText("La cédula debe tener 10 dígitos.");
+                    mostrarAvisoDebajo.run();
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                lblAviso.setText("La cédula solo debe contener números.");
+                mostrarAvisoDebajo.run();
+                return;
+            }
+
+            if (nombre.isEmpty()) {
+                lblAviso.setText("El nombre es obligatorio.");
+                mostrarAvisoDebajo.run();
+                return;
+            }
+
+            // 2. Teléfono: solo números (try-catch) y máximo 10 dígitos
+            try {
+                if (telefonoStr.isEmpty()) {
+                    lblAviso.setText("Ingrese el teléfono.");
+                    mostrarAvisoDebajo.run();
+                    return;
+                }
+                if (!telefonoStr.matches("\\d+")) {
+                    throw new NumberFormatException();
+                }
+                Long.parseLong(telefonoStr);
+                if (telefonoStr.length() > 10) {
+                    lblAviso.setText("El teléfono debe tener máximo 10 dígitos.");
+                    mostrarAvisoDebajo.run();
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                lblAviso.setText("El teléfono solo debe contener números.");
+                mostrarAvisoDebajo.run();
+                return;
+            }
+
+            // 3. Correo electrónico
+            if (correo.isEmpty() || !correo.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+                lblAviso.setText("Ingrese un correo electrónico válido.");
+                mostrarAvisoDebajo.run();
+                return;
+            }
+
+            ocultarAvisoDebajo.run();
+            avisoDebajo.dispose();
             resultado[0] = new Cliente(
-                    cedula,
-                    txtNombre.getText().trim(),
-                    txtTelefono.getText().trim(),
-                    txtDireccion.getText().trim(),
-                    txtCorreo.getText().trim()
+                    cedIngresada,
+                    nombre,
+                    telefonoStr,
+                    direccion,
+                    correo
             );
             dialogo.dispose();
         });
 
-        btnCancelar.addActionListener(e -> dialogo.dispose());
+        btnCancelar.addActionListener(e -> {
+            ocultarAvisoDebajo.run();
+            avisoDebajo.dispose();
+            dialogo.dispose();
+        });
+
+        dialogo.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                ocultarAvisoDebajo.run();
+                avisoDebajo.dispose();
+            }
+        });
 
         dialogo.add(panelCampos, BorderLayout.CENTER);
         dialogo.add(panelBotones, BorderLayout.SOUTH);
@@ -320,8 +467,8 @@ public class Pantalla_Factura extends JFrame{
     }
 
     /**
-     * Abre una ventana modal (JDialog) que simula la vista previa 
-     * impresa de la última factura generada con todos los datos del 
+     * Abre una ventana modal (JDialog) que simula la vista previa
+     * impresa de la última factura generada con todos los datos del
      * cliente, productos y total.
      */
     private void mostrarVentanaImpresionFactura() {
@@ -359,7 +506,6 @@ public class Pantalla_Factura extends JFrame{
     }
 
     // Metodos getters para el controlador
-
     /**
      * Obtiene la cédula del cliente ingresada en el campo de texto.
      *
@@ -406,7 +552,6 @@ public class Pantalla_Factura extends JFrame{
     }
 
     // MÉTODOS PARA ASOCIAR LOS EVENTOS DESDE EL CONTROLADOR
-
     /**
      * Asocia un escuchador de eventos al botón de añadir producto.
      *

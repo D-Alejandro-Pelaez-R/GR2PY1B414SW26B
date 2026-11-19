@@ -34,20 +34,4 @@ public class UsuarioEncargadoDAO {
         }
         return null;
     }
-<<<<<<< HEAD
-    
-    /**
-     * Elimina un usuario encargado de la lista utilizando su cédula 
-     */
-    public void eliminarEncargado(String cedula){
-        for (int i = 0; i < listadoEncargados.size(); i++) {
-            if (listadoEncargados.get(i).getCedula().equals(cedula)) {
-                listadoEncargados.remove(i);
-                return;
-            }
-        }
-    }
-=======
-
->>>>>>> 7640ebedbb0db5f2cc4273223aee99f98b50f244
 }
